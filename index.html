@@ -7,6 +7,52 @@
   <title>초록타자 3</title>
   <link rel="icon" type="image/png" href="https://ifh.cc/g/R3rRdB.png">
   <style>
+    /* --- 인트로(로딩) 스타일 --- */
+    #intro-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #intro-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .intro-text {
+      font-size: 5rem;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(90deg, #00ff99, #00ffff, #00cc66);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 4s infinite, glow 1.5s ease-in-out infinite alternate;
+    }
+    .intro-loading {
+      margin-top: 20px;
+      color: #00ff99;
+      font-size: 1.5rem;
+      font-family: 'Courier New', monospace;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% }
+      50% { background-position: 100% }
+      100% { background-position: 0% }
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00ff99, 0 0 30px #00cc66; }
+      to   { text-shadow: 0 0 20px #00ff99, 0 0 50px #00ffff; }
+    }
+    /* --- 기존 스타일 아래에 이어짐 --- */
     body {
       background: #e8f5e9;
       font-family: Arial, sans-serif;
@@ -159,8 +205,14 @@
   </style>
 </head>
 <body>
+  <!-- 인트로(로딩) 오버레이 -->
+  <div id="intro-overlay">
+    <div class="intro-text">초록타자</div>
+    <div class="intro-loading" id="loading">로딩중...</div>
+  </div>
+  <!-- 본문 -->
   <button id="toggle-mode">다크 모드</button>
-  <div id="container">
+  <div id="container" style="opacity:1;">
     <h1>초록타자 3</h1>
     <div id="settings">
       <div>
@@ -219,6 +271,20 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // --- 인트로(로딩) 2초간 보여주기 ---
+    window.addEventListener('DOMContentLoaded', function() {
+      const intro = document.getElementById('intro-overlay');
+      const mainContainer = document.getElementById('container');
+      setTimeout(() => {
+        intro.classList.add('hide');
+        setTimeout(() => {
+          intro.style.display = "none";
+          // 페이지 본문 보이기 (이미 보이지만 fade 효과 위해 필요시 opacity 조절)
+          mainContainer.style.opacity = 1;
+        }, 600);
+      }, 2000);
+    });
+
     let currentSentences = [];
     let currentSentenceIndex = 0;
     let currentText = "";
