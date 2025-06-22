@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "user001",
+      "name": "초보 타자",
+      "highestWPM": 42,
+      "accuracy": 91,
+      "lastPlayed": "2025-06-21T15:30:00Z",
+      "sessionHistory": [
+        {
+          "date": "2025-06-20",
+          "wpm": 38,
+          "accuracy": 89
+        },
+        {
+          "date": "2025-06-21",
+          "wpm": 42,
+          "accuracy": 91
+        }
+      ]
+    }
+  ]
+}
