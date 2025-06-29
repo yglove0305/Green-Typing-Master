@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta name="description" content="초록타자는 타자 실력을 키우는 웹 기반 연습 도구입니다.">
+ <meta name="description" content="초록타자는 타자 실력을 키우는 웹 기반 연습 도구입니다.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>초록타자 3</title>
-  <script>
-    function isStandalone() {
-      return window.matchMedia('(display-mode: standalone)').matches ||
-             window.navigator.standalone === true;
-    }
-    if (!isStandalone()) {
-      // 스타일 전체 삽입
-      const style = document.createElement('style');
-      style.textContent = `
+  <link rel="icon" type="image/png" href="https://ifh.cc/g/bt8xA2.jpg">
+  <style>
+    /* --- 인트로(로딩) 스타일 --- */
     #intro-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -58,6 +52,7 @@
       from { text-shadow: 0 0 10px #00ff99, 0 0 30px #00cc66; }
       to   { text-shadow: 0 0 20px #00ff99, 0 0 50px #00ffff; }
     }
+    /* --- 기존 스타일 아래에 이어짐 --- */
     body {
       background: #e8f5e9;
       font-family: Arial, sans-serif;
@@ -207,16 +202,7 @@
     #leaderboard.dark, #history.dark, #chart-container.dark {
       color: #ECEFF1 !important;
     }
-      `;
-      document.head.appendChild(style);
-      // 파비콘 추가
-      const link = document.createElement('link');
-      link.rel = "icon";
-      link.type = "image/png";
-      link.href = "https://ifh.cc/g/bt8xA2.jpg";
-      document.head.appendChild(link);
-    }
-  </script>
+  </style>
 </head>
 <body>
   <!-- 인트로(로딩) 오버레이 -->
@@ -293,6 +279,7 @@
         intro.classList.add('hide');
         setTimeout(() => {
           intro.style.display = "none";
+          // 페이지 본문 보이기 (이미 보이지만 fade 효과 위해 필요시 opacity 조절)
           mainContainer.style.opacity = 1;
         }, 600);
       }, 2000);
@@ -319,6 +306,7 @@
     const container = document.getElementById("container");
     const toggleBtn = document.getElementById("toggle-mode");
 
+    // 1. 폰트 크기 변경 처음부터 적용
     function applyFontSize() {
       const size = fontSizeSelect.value;
       if(size === "small") typingArea.style.fontSize = "14px";
@@ -327,11 +315,13 @@
     }
     fontSizeSelect.addEventListener("change", applyFontSize);
 
+    // 2. 모드 변경시 모드 변수 반영
     modeSelect.addEventListener("change", () => {
       mode = modeSelect.value;
       loadNewText();
     });
 
+    // 3. 난이도는 실제로 반영하지 않지만, 만약 향후 반영할 경우 위해서 이벤트 유지(기능 없음)
     difficultySelect.addEventListener("change", loadNewText);
 
     const allSentences = [
@@ -432,6 +422,7 @@
       progressBar.textContent = percentage + "%";
     }
 
+    // localStorage 오류 대비
     let leaderboard = [];
     let historyResults = [];
     try {
@@ -598,6 +589,7 @@
       resetHighlights();
     }
 
+    // ★ CSV 한글 깨짐 방지 (BOM 추가)
     function exportCSV() {
       if(!historyResults.length) return;
       let csvContent = "\uFEFF";
@@ -615,6 +607,7 @@
       document.body.removeChild(link);
     }
 
+    // ★ 진행상황 저장
     document.getElementById("save-progress-btn").addEventListener("click", function() {
       const progress = {
         currentSentences,
@@ -637,6 +630,7 @@
       document.body.removeChild(link);
     });
 
+    // ★ 진행상황 불러오기
     document.getElementById("load-progress-btn").addEventListener("click", function() {
       document.getElementById("progress-file-input").click();
     });
@@ -664,7 +658,7 @@
           resetStats();
           updateHighlight();
           calculateStats();
-          typingArea.disabled = false;
+          typingArea.disabled = false; // 불러온 뒤 입력 가능
           if (darkMode) {
             document.body.classList.add("dark");
             container.classList.add("dark");
@@ -735,6 +729,7 @@
       });
     }
 
+    // 다크/라이트 모드 토글
     let darkMode = false;
     function toggleMode() {
       darkMode = !darkMode;
@@ -797,6 +792,7 @@
     document.getElementById("export-btn").addEventListener("click", exportCSV);
     toggleBtn.addEventListener("click", toggleMode);
 
+    // 초기화
     loadNewText();
     renderHistory();
     renderLeaderboard();
