@@ -1,1 +1,3 @@
-User-agent: * Allow: / Sitemap: https://green-typing-master.vercel.app/index.html
+User-agent: *
+Allow: /
+Sitemap: https://green-typing-master.vercel.app/index.html
